@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>Dead Mileage</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=IBM+Plex+Sans+Condensed:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one-screen game cabinet. Night-desert cover sheet over a full-bleed canvas; the speed band is the signature detail. */
+:root {
+  --night: #0b1517;      /* teal-black desert night */
+  --night-2: #12211f;    /* raised panel */
+  --bone: #e9dfcc;       /* bleached bone text */
+  --dust: #9a8f7c;       /* muted captions */
+  --headlight: #f2b33d;  /* warm headlight pool, the one accent */
+  --rust: #b4532a;       /* stalled / danger */
+  --sage: #7fa37a;       /* outrunning / safe */
+  --rule: #2a3a37;
+  --display: "Big Shoulders Stencil Display", "Impact", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+[hidden] { display: none !important; }
+body {
+  background: var(--night);
+  color: var(--bone);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+#canvas {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  background: #000;
+  outline: none;
+}
+#canvas:focus-visible { outline: 2px solid var(--headlight); outline-offset: -2px; }
+
+.cover {
+  position: fixed; inset: 0;
+  overflow-y: auto;
+  background:
+    radial-gradient(120% 70% at 50% 118%, rgba(242,179,61,.22), transparent 60%),
+    radial-gradient(60% 40% at 22% 105%, rgba(242,179,61,.10), transparent 70%),
+    var(--night);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px;
+  display: grid;
+  place-items: center;
+  transition: opacity .5s ease;
+}
+.cover.fading { opacity: 0; pointer-events: none; }
+.sheet {
+  width: 100%;
+  max-width: 820px;
+  display: grid;
+  gap: 28px;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dust);
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+.eyebrow span + span::before { content: "/"; margin-right: 14px; color: var(--rule); }
+h1 {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(64px, 14vw, 148px);
+  line-height: .82;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--bone);
+  text-wrap: balance;
+}
+h1 em { font-style: normal; color: var(--headlight); }
+.lede { margin: 0; max-width: 58ch; font-size: 17px; color: var(--bone); }
+
+/* Speed band: the game's real pressure zones, from tuning.gd */
+.band { display: grid; gap: 8px; }
+.band-bar {
+  position: relative;
+  height: 34px;
+  display: grid;
+  grid-template-columns: 10fr 50fr 60fr;
+  border: 1px solid var(--rule);
+}
+.zone {
+  display: flex; align-items: center;
+  padding-inline: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden;
+}
+.z-stall { background: var(--rust); color: var(--night); }
+.z-exposed { background: repeating-linear-gradient(135deg, rgba(242,179,61,.28) 0 6px, rgba(242,179,61,.12) 6px 12px); color: var(--headlight); }
+.z-safe { background: rgba(127,163,122,.22); color: var(--sage); }
+.needle {
+  position: absolute; top: -6px; bottom: -6px; width: 2px;
+  background: var(--bone);
+  left: 8%;
+  animation: needle 7s cubic-bezier(.6,0,.3,1) infinite alternate;
+}
+@keyframes needle { 0% { left: 3%; } 45% { left: 30%; } 100% { left: 86%; } }
+.ticks {
+  display: grid; grid-template-columns: 10fr 50fr 60fr;
+  font-family: var(--mono); font-size: 11px; color: var(--dust);
+  font-variant-numeric: tabular-nums;
+}
+.ticks span:not(:first-child) { border-left: 1px solid var(--rule); padding-left: 6px; }
+.band-caption { margin: 0; color: var(--dust); font-size: 14px; max-width: 62ch; }
+
+.cta-row { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.start {
+  appearance: none; border: 0; cursor: pointer;
+  background: var(--headlight); color: var(--night);
+  font-family: var(--display); font-weight: 900;
+  font-size: 30px; letter-spacing: .06em; text-transform: uppercase;
+  padding: 12px 30px 10px;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 94% 100%, 0 100%);
+  transition: transform .15s ease, filter .15s ease;
+}
+.start:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.start:focus-visible { outline: 2px solid var(--bone); outline-offset: 4px; }
+.start[disabled] { cursor: progress; filter: saturate(.6) brightness(.85); transform: none; }
+.status { font-family: var(--mono); font-size: 12px; color: var(--dust); min-width: 0; }
+.progress { width: 100%; height: 3px; background: var(--rule); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--headlight); transition: width .2s linear; }
+
+.grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; }
+.grid > * { min-width: 0; }
+h2 {
+  font-family: var(--display); font-weight: 700;
+  font-size: 22px; letter-spacing: .08em; text-transform: uppercase;
+  margin: 0 0 10px; color: var(--headlight);
+}
+.controls { width: 100%; border-collapse: collapse; font-size: 14px; }
+.controls td { padding: 5px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.controls td:first-child { color: var(--dust); padding-right: 12px; }
+kbd {
+  font-family: var(--mono); font-size: 12px;
+  display: inline-block; min-width: 22px; text-align: center;
+  padding: 1px 6px; margin: 0 2px 2px 0;
+  border: 1px solid var(--rule); border-bottom-width: 2px;
+  background: var(--night-2); color: var(--bone);
+}
+.notes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; font-size: 14px; color: var(--bone); }
+.notes li { padding-left: 14px; position: relative; }
+.notes li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 2px; background: var(--headlight); }
+.fine { font-size: 13px; color: var(--dust); margin: 0; }
+.fine a { color: var(--headlight); }
+.fine a:focus-visible { outline: 2px solid var(--headlight); outline-offset: 2px; }
+
+/* Build picker: one row per merged PR, newest first, grouped by merge date. */
+.build { display: grid; gap: 12px; border-top: 1px solid var(--rule); padding-top: 22px; }
+.build-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.build-head h2 { margin: 0; }
+.build-count { font-family: var(--mono); font-size: 12px; color: var(--dust); font-variant-numeric: tabular-nums; }
+.select-wrap { position: relative; max-width: 100%; }
+.select-wrap::after {
+  content: ""; position: absolute; right: 16px; top: 50%;
+  width: 8px; height: 8px; margin-top: -6px;
+  border-right: 2px solid var(--headlight); border-bottom: 2px solid var(--headlight);
+  transform: rotate(45deg); pointer-events: none;
+}
+#buildSelect {
+  appearance: none; -webkit-appearance: none;
+  width: 100%; max-width: 100%;
+  font-family: var(--body); font-size: 16px; font-weight: 600;
+  color: var(--bone); background: var(--night-2);
+  border: 1px solid var(--rule); border-radius: 0;
+  padding: 11px 44px 11px 14px; cursor: pointer;
+  text-overflow: ellipsis;
+}
+#buildSelect:hover { border-color: var(--dust); }
+#buildSelect:focus-visible { outline: 2px solid var(--headlight); outline-offset: 2px; }
+#buildSelect optgroup, #buildSelect option { background: var(--night-2); color: var(--bone); }
+.build-card { display: grid; gap: 6px; min-width: 0; }
+.build-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px;
+  font-family: var(--mono); font-size: 12px; color: var(--dust); font-variant-numeric: tabular-nums;
+}
+.build-meta a { color: var(--headlight); text-decoration: none; border-bottom: 1px solid currentColor; }
+.build-meta a:hover { color: var(--bone); }
+.build-meta a:focus-visible { outline: 2px solid var(--headlight); outline-offset: 2px; }
+.key {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
+  color: var(--night); background: var(--bone); padding: 1px 7px;
+}
+.pill {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  padding: 1px 7px; border: 1px solid currentColor;
+}
+.pill.merged { color: var(--sage); }
+.pill.open { color: var(--headlight); }
+.build-summary { margin: 0; font-size: 15px; color: var(--bone); max-width: 66ch; }
+
+.error {
+  border: 1px solid var(--rust); background: rgba(180,83,42,.12);
+  padding: 12px 14px; font-size: 14px; color: var(--bone);
+}
+
+.hud-btns {
+  position: fixed;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  right: calc(max(10px, env(safe-area-inset-right, 0px)));
+  display: flex; gap: 8px; z-index: 5;
+}
+.hud-btns button {
+  appearance: none; cursor: pointer;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  background: rgba(11,21,23,.72); color: var(--bone);
+  border: 1px solid var(--rule); padding: 6px 10px;
+}
+.hud-btns button:hover { border-color: var(--headlight); color: var(--headlight); }
+.hud-btns button:focus-visible { outline: 2px solid var(--headlight); }
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  #buildSelect { font-size: 15px; }
+  .zone { font-size: 9px; padding-inline: 5px; letter-spacing: .06em; }
+  .start { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .needle { animation: none; left: 30%; }
+  .cover, .start, .progress i { transition: none; }
+}
+</style>
+
+<canvas id="canvas" tabindex="0" hidden>Your browser does not support the canvas element.</canvas>
+
+<div class="hud-btns" id="hudBtns" hidden>
+  <button type="button" id="switchBtn">Change build</button>
+  <button type="button" id="fsBtn">Fullscreen</button>
+</div>
+
+<main class="cover" id="cover">
+  <div class="sheet">
+    <div class="eyebrow"><span>Playable prototype</span><span>Solo run</span><span>Build history</span></div>
+    <h1>Dead<br><em>Mileage</em></h1>
+    <p class="lede">Drive an armored rig through a desert village overrun by the dead. Speed keeps you alive. Fuel forces you to stop. Survive one compressed day and night until dawn.</p>
+
+    <section class="band" aria-label="How speed affects the horde">
+      <div class="band-bar" aria-hidden="true">
+        <div class="zone z-stall">Stalled</div>
+        <div class="zone z-exposed">Exposed</div>
+        <div class="zone z-safe">Outrunning them</div>
+        <div class="needle"></div>
+      </div>
+      <div class="ticks" aria-hidden="true"><span>0</span><span>10 km/h</span><span>60 km/h → 120</span></div>
+      <p class="band-caption">The horde director watches your speedometer. Under 10 km/h the dead spawn twice as fast and close in from every side. Above 60 km/h they fall behind.</p>
+    </section>
+
+    <section class="build" aria-labelledby="buildHeading">
+      <div class="build-head">
+        <h2 id="buildHeading">Build</h2>
+        <span class="build-count" id="buildCount">Loading build list</span>
+      </div>
+      <div class="select-wrap">
+        <select id="buildSelect" aria-label="Build to play" disabled>
+          <option>Loading builds…</option>
+        </select>
+      </div>
+      <div class="build-card" id="buildCard" aria-live="polite"></div>
+    </section>
+
+    <div class="cta-row">
+      <button class="start" id="startBtn" type="button">Start engine</button>
+      <div class="status" id="status" aria-live="polite">About 10 MB download the first time. Needs a keyboard or gamepad.</div>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+    <div class="error" id="error" role="alert" hidden></div>
+
+    <div class="grid">
+      <section>
+        <h2>Controls</h2>
+        <table class="controls">
+          <tr><td>Drive</td><td><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or arrows</td></tr>
+          <tr><td>Boost</td><td><kbd>Shift</kbd> burns fuel and heats the engine</td></tr>
+          <tr><td>Handbrake</td><td><kbd>Space</kbd></td></tr>
+          <tr><td>Refuel</td><td>Stop on a depot pad, hold <kbd>E</kbd></td></tr>
+          <tr><td>Flip upright</td><td><kbd>R</kbd></td></tr>
+          <tr><td>Change seat</td><td><kbd>1</kbd> Driver <kbd>2</kbd> Gunner <kbd>3</kbd> Co-pilot</td></tr>
+          <tr><td>Gunner turret</td><td><kbd>LMB</kbd> fire, <kbd>F</kbd> reload, <kbd>Q</kbd> ammo, <kbd>G</kbd> spotlight</td></tr>
+          <tr><td>Fast-forward clock</td><td>Hold <kbd>T</kbd></td></tr>
+          <tr><td>Restart / menu</td><td><kbd>Enter</kbd> / <kbd>Esc</kbd></td></tr>
+          <tr><td>Gamepad</td><td>RT/LT drive, stick steer, A boost, X refuel</td></tr>
+        </table>
+      </section>
+      <section>
+        <h2>Field notes</h2>
+        <ul class="notes">
+          <li>An auto-turret on the roof shoots whatever gets close. It can't keep up with runners clinging to the hull.</li>
+          <li>Runners cling below 35 km/h. Get above 45 km/h, drift, or jump to shake them off.</li>
+          <li>Four fuel depots. Each one runs dry, so plan your route.</li>
+          <li>Night brings fog, headlights only, and up to 250 zombies.</li>
+        </ul>
+      </section>
+    </div>
+    <p class="fine">Each build is the game as it was when that pull request merged; builds marked PR open are previews from an unmerged branch. Controls and notes describe the newest build, so older builds may lack some of them. Graybox art and placeholder sound. Co-op runs in the desktop build only. Runs best in Chrome or Edge on a laptop or desktop. See the <a href="store.html">store page mockup</a> for gameplay footage and the garage.</p>
+  </div>
+</main>
+
+
+<script>
+(function () {
+  // Builds come from versions.json (written by web/build_web.py). Each build
+  // has its own game pack; builds on the same Godot version share one engine.
+  const STORE_KEY = 'dm-build';
+  const startBtn = document.getElementById('startBtn');
+  const statusEl = document.getElementById('status');
+  const bar = document.getElementById('bar');
+  const errorEl = document.getElementById('error');
+  const cover = document.getElementById('cover');
+  const canvas = document.getElementById('canvas');
+  const hudBtns = document.getElementById('hudBtns');
+  const select = document.getElementById('buildSelect');
+  const card = document.getElementById('buildCard');
+  const countEl = document.getElementById('buildCount');
+
+  let manifest = null;
+  let loadedEngine = null;   // Godot version whose index.js is on the page
+  let engine = null;
+  let started = false;
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+    startBtn.disabled = false;
+    startBtn.textContent = 'Try again';
+  }
+  function mb(n) { return (n / 1048576).toFixed(1) + ' MB'; }
+  function setProgress(f, text) {
+    bar.style.width = (f * 100).toFixed(1) + '%';
+    if (text) statusEl.textContent = text;
+  }
+  function remember(key) { try { localStorage.setItem(STORE_KEY, key); } catch (e) {} }
+  function recalled() { try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; } }
+  function current() { return manifest && manifest.builds.find(function (b) { return b.key === select.value; }); }
+  function niceDate(iso) {
+    const d = new Date(iso + 'T12:00:00Z');
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  }
+  function el(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  // --- Build picker ---------------------------------------------------------
+
+  function renderCard(b) {
+    card.textContent = '';
+    const meta = el('div', 'build-meta');
+    meta.appendChild(el('span', 'key', b.key));
+    meta.appendChild(el('span', 'pill ' + b.status, b.status === 'open' ? 'PR open' : 'Merged'));
+    meta.appendChild(el('span', null, niceDate(b.date)));
+    if (b.pr_url) {
+      const a = el('a', null, 'PR #' + b.pr);
+      a.href = b.pr_url; a.target = '_blank'; a.rel = 'noopener';
+      meta.appendChild(a);
+    }
+    meta.appendChild(el('span', null, b.commit));
+    meta.appendChild(el('span', null, 'Godot ' + b.engine.replace('.stable', '')));
+    card.appendChild(meta);
+    card.appendChild(el('p', 'build-summary', b.summary));
+  }
+
+  function populate() {
+    select.textContent = '';
+    let group = null, groupDate = null;
+    manifest.builds.forEach(function (b) {
+      if (b.date !== groupDate) {
+        groupDate = b.date;
+        group = document.createElement('optgroup');
+        group.label = niceDate(b.date);
+        select.appendChild(group);
+      }
+      const o = document.createElement('option');
+      o.value = b.key;
+      o.textContent = b.key + '  ' + b.title + (b.status === 'open' ? '  (PR open)' : '');
+      group.appendChild(o);
+    });
+    const merged = manifest.builds.filter(function (b) { return b.status === 'merged'; }).length;
+    countEl.textContent = merged + ' merged' + (merged === manifest.builds.length ? '' : ', ' + (manifest.builds.length - merged) + ' open');
+
+    // A bare #KEY in the link picks a build; otherwise the last one played, else the newest.
+    const wanted = [location.hash.slice(1), recalled()];
+    const pick = wanted.find(function (k) { return k && manifest.builds.some(function (b) { return b.key === k; }); });
+    select.value = pick || manifest.builds[0].key;
+    select.disabled = false;
+    renderCard(current());
+  }
+
+  select.addEventListener('change', function () {
+    const b = current();
+    renderCard(b);
+    remember(b.key);
+    try { history.replaceState(null, '', '#' + b.key); } catch (e) {}
+    if (loadedEngine && b.engine !== loadedEngine) {
+      statusEl.textContent = 'This build uses Godot ' + b.engine + '. Starting it reloads the page.';
+    }
+  });
+
+  // --- Engine ---------------------------------------------------------------
+
+  function loadEngineScript(version) {
+    return new Promise(function (resolve, reject) {
+      const s = document.createElement('script');
+      s.src = 'engine/' + version + '/index.js';
+      s.onload = function () { loadedEngine = version; resolve(); };
+      s.onerror = function () { reject(new Error('Could not load the Godot ' + version + ' loader.')); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function checkFeatures() {
+    const missing = Engine.getMissingFeatures({ threads: false });
+    if (typeof DecompressionStream === 'undefined') missing.push('DecompressionStream (update your browser)');
+    if (missing.length) {
+      showError('This browser is missing features the game needs: ' + missing.join(', ') + '. Try a current version of Chrome, Edge, Firefox or Safari on a computer.');
+      startBtn.disabled = true;
+      return false;
+    }
+    return true;
+  }
+
+  // The engine ships gzipped to stay under the host's per-file limit, and the
+  // host only serves standard web types, so the pack is published as .wasm.
+  // Godot asks for <exe>.wasm and index.pck; hand it the right files instead.
+  let gzLoaded = 0;
+  const realFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    const url = typeof input === 'string' ? input : (input && input.url) || '';
+    const b = current();
+    if (b && /(^|\/)index\.wasm(\?|$)/.test(url)) {
+      return realFetch('engine/' + b.engine + '/engine-gz.wasm', init).then(async function (res) {
+        if (!res.ok) throw new Error('Could not download the game engine (HTTP ' + res.status + ').');
+        const total = Number(res.headers.get('Content-Length')) || 10 * 1048576;
+        const reader = res.body.getReader();
+        const chunks = [];
+        for (;;) {
+          const r = await reader.read();
+          if (r.done) break;
+          chunks.push(r.value);
+          gzLoaded += r.value.length;
+          setProgress(Math.min(0.9, gzLoaded / total * 0.9), 'Downloading engine ' + mb(gzLoaded) + ' / ' + mb(total));
+        }
+        const blob = new Blob(chunks);
+        const head = new Uint8Array(await blob.slice(0, 2).arrayBuffer());
+        const isGzip = head[0] === 0x1f && head[1] === 0x8b;
+        setProgress(0.92, 'Unpacking engine');
+        const body = isGzip ? blob.stream().pipeThrough(new DecompressionStream('gzip')) : blob.stream();
+        return new Response(body, { status: 200, headers: { 'Content-Type': 'application/wasm' } });
+      });
+    }
+    if (b && /(^|\/)index\.pck(\?|$)/.test(url)) {
+      return realFetch('builds/' + b.key + '/game-pck.wasm', init);
+    }
+    return realFetch(input, init);
+  };
+
+  function start() {
+    const b = current();
+    if (!b) return;
+    remember(b.key);
+    // One engine per page load: a different Godot version needs a fresh page.
+    if (loadedEngine !== b.engine) { location.reload(); return; }
+    errorEl.hidden = true;
+    startBtn.disabled = true;
+    select.disabled = true;
+    startBtn.textContent = 'Loading';
+    setProgress(0.02, 'Connecting');
+    canvas.hidden = false;
+    const exe = 'engine/' + b.engine + '/index';
+    const sizes = { 'index.pck': b.pck_size };
+    sizes[exe + '.wasm'] = manifest.engines[b.engine].wasm_size;
+    engine = new Engine({
+      args: [],
+      canvas: canvas,
+      canvasResizePolicy: 2,
+      executable: exe,
+      mainPack: 'index.pck',
+      fileSizes: sizes,
+      focusCanvas: true,
+      ensureCrossOriginIsolationHeaders: false,
+      experimentalVK: false,
+      gdextensionLibs: [],
+      emscriptenPoolSize: 8,
+      godotPoolSize: 4,
+      onProgress: function (cur, total) {
+        if (total > 0 && cur >= total) setProgress(0.97, 'Starting ' + b.key);
+      },
+      onExit: function () {
+        cover.classList.remove('fading');
+        cover.hidden = false;
+        canvas.hidden = true;
+        hudBtns.hidden = true;
+        statusEl.textContent = 'The game closed. Reload the page to play again.';
+        startBtn.hidden = true;
+      },
+    });
+    started = true;
+    engine.startGame().then(function () {
+      setProgress(1, 'Running ' + b.key);
+      cover.classList.add('fading');
+      setTimeout(function () { cover.hidden = true; }, 520);
+      document.getElementById('switchBtn').textContent = 'Change build (' + b.key + ')';
+      hudBtns.hidden = false;
+      canvas.focus();
+    }).catch(function (err) {
+      canvas.hidden = true;
+      select.disabled = false;
+      showError('The game failed to start: ' + (err && err.message ? err.message : err));
+    });
+  }
+
+  startBtn.addEventListener('click', function () {
+    if (started) { location.reload(); return; }  // after a failed start
+    start();
+  });
+
+  // A running engine can't be swapped, so changing build goes back to a fresh cover page.
+  document.getElementById('switchBtn').addEventListener('click', function () { location.reload(); });
+
+  document.getElementById('fsBtn').addEventListener('click', function () {
+    const root = document.documentElement;
+    const p = document.fullscreenElement ? document.exitFullscreen() : (root.requestFullscreen ? root.requestFullscreen() : null);
+    if (p && p.catch) p.catch(function () {});
+    canvas.focus();
+  });
+  document.addEventListener('fullscreenchange', function () {
+    document.getElementById('fsBtn').textContent = document.fullscreenElement ? 'Exit fullscreen' : 'Fullscreen';
+  });
+  canvas.addEventListener('pointerdown', function () { canvas.focus(); });
+
+  // --- Boot -----------------------------------------------------------------
+
+  startBtn.disabled = true;
+  realFetch('versions.json', { cache: 'no-cache' }).then(function (res) {
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }).then(function (m) {
+    if (!m.builds || !m.builds.length) throw new Error('no builds listed');
+    manifest = m;
+    populate();
+    return loadEngineScript(current().engine);
+  }).then(function () {
+    if (checkFeatures()) startBtn.disabled = false;
+  }).catch(function (err) {
+    countEl.textContent = '';
+    showError('The build list could not be loaded (' + err.message + '). Reload the page to try again.');
+    startBtn.disabled = true;
+  });
+})();
+</script>
+</body>
+</html>

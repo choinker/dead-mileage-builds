@@ -1,0 +1,213 @@
+{
+  "engines": {
+    "4.7.2.stable": {
+      "wasm_size": 39514754
+    }
+  },
+  "builds": [
+    {
+      "key": "WLD-8",
+      "title": "Defend HQ mode",
+      "pr": 24,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/24",
+      "date": "2026-10-26",
+      "commit": "1db5966",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 327696,
+      "summary": "A new Defend HQ (Solo) mode on the start screen: hold an HQ with four turret towers at the heart of a seeded maze against endless, growing waves that come in faster each time. Every third wave the garage adds HQ armor, tower upgrades and Repair HQ; a wrecked Rig respawns at the HQ, and the run ends when the HQ falls."
+    },
+    {
+      "key": "LOOP-7",
+      "title": "Garage screen between days",
+      "pr": 22,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/22",
+      "date": "2026-10-25",
+      "commit": "2179773",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 288072,
+      "summary": "Play Solo and every dawn now open a garage: the crew sits around a burn barrel by the Rig while you spend scrap on the five upgrade tracks, then Continue to the next day. Esc's pause screen also lists the dev keys, and quitting to the menu no longer freezes it."
+    },
+    {
+      "key": "VEH-7",
+      "title": "Stat upgrades and pause screen",
+      "pr": 21,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/21",
+      "date": "2026-10-25",
+      "commit": "1a783a6",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 266856,
+      "summary": "Five upgrade tracks (engine, fuel tank, turret rounds, ammo racks, armor plating) change the Rig's stats from the next round. Until the garage arrives, F5-F9 raise a track and Enter restarts with it. Esc now opens a pause screen listing your upgrades, what they do, and the controls."
+    },
+    {
+      "key": "CMB-5",
+      "title": "Auto-turret on finite ammo",
+      "pr": 20,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/20",
+      "date": "2026-10-25",
+      "commit": "27ef1e3",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 250188,
+      "summary": "The Solo auto-turret now fires from the same finite Standard ammo as the gunner, shooting slower but harder, and goes quiet when it runs dry until you restock at an ammo cache. Every seat now sees the turret ammo panel."
+    },
+    {
+      "key": "LOOP-5",
+      "title": "Settlement objectives",
+      "pr": 19,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/19",
+      "date": "2026-10-25",
+      "commit": "87d4a58",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 249676,
+      "summary": "Three optional objectives now give the crew reasons to stop besides fuel: follow a coloured beam, then crawl past a wreck to salvage it, stop to rescue a survivor, or stop at the debris to clear the road into a walled-in fuel depot. Each pays scrap once, and the HUD lists them with progress."
+    },
+    {
+      "key": "LOOP-6",
+      "title": "Scrap from kills",
+      "pr": 18,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/18",
+      "date": "2026-10-21",
+      "commit": "e3b9478",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 237320,
+      "summary": "Killing zombies now earns the crew scrap: Walkers 1, Runners 2, Brutes 10. The HUD shows the scrap total under the clock, and the dawn screen shows what the night earned. Spending scrap comes later."
+    },
+    {
+      "key": "CMB-4",
+      "title": "Ammo system and ammo caches",
+      "pr": 17,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/17",
+      "date": "2026-10-21",
+      "commit": "0c8204f",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 234852,
+      "summary": "Turret ammo is now finite: Standard and Heavy each have a magazine and a limited reserve, and an empty gun dry-fires. Stop the Rig on a green ammo cache pad to restock; each cache runs out."
+    },
+    {
+      "key": "MAINT-16",
+      "title": "Sfx restart error fix",
+      "pr": 16,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/16",
+      "date": "2026-10-21",
+      "commit": "d46a108",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 221636,
+      "summary": "No gameplay change: restarting (Enter) or going back to the menu no longer floods the console with Sfx errors. A sound playing on the Rig now stops at restart instead of finishing."
+    },
+    {
+      "key": "NET-1",
+      "title": "Host-authoritative co-op sync",
+      "pr": 14,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/14",
+      "date": "2026-10-21",
+      "commit": "7f15ba8",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 221524,
+      "summary": "Co-op (desktop only for now): the host runs the Rig and the horde, and the other crew see them smoothly with a client gunner whose shots the host confirms. In Solo, leaving the Driver seat hands the Rig to an autopilot; ask for a seat at speed and it slows down so you can swap, and press 1 to take the wheel back."
+    },
+    {
+      "key": "NET-8",
+      "title": "Latency spike",
+      "pr": 12,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/12",
+      "date": "2026-10-21",
+      "commit": "6b6af73",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 191156,
+      "summary": "Dev tool for judging co-op feel under lag: in Solo, F2 adds a simulated round trip (0 to 250 ms) so you see the Rig and zombies as a client would, and F3 switches the gunner between server-side aim and client aim with host rewind. An autopilot drives while the Driver seat is empty."
+    },
+    {
+      "key": "TECH-8",
+      "title": "Local co-op test harness",
+      "pr": 8,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/8",
+      "date": "2026-10-20",
+      "commit": "ae6cfd2",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 166784,
+      "summary": "Developer tool: tools/coop_harness.py opens a host and two clients on one machine, tiled and auto-joined as Driver, Gunner and Co-pilot, each labelled with its peer ID. Desktop only; the web build plays the same as before."
+    },
+    {
+      "key": "AUD-4",
+      "title": "Weapon and impact sounds",
+      "pr": 6,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/6",
+      "date": "2026-10-19",
+      "commit": "94781f9",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 160952,
+      "summary": "Placeholder synthesised sounds for both turrets, bullet impacts, rams, Brute and Walker hits on the Rig, the Brute flip, and clinging Runners."
+    },
+    {
+      "key": "CMB-1",
+      "title": "Gunner manual turret",
+      "pr": 5,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/5",
+      "date": "2026-10-19",
+      "commit": "e9f4a4e",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 148020,
+      "summary": "The Gunner seat runs the roof turret by hand: aim with the camera, LMB to fire, F to reload, Q to switch Standard and Heavy ammo, G for the spotlight. Hit markers, a reload ring, and gunfire that draws the horde."
+    },
+    {
+      "key": "VEH-4",
+      "title": "Crew seats and seat swapping",
+      "pr": 4,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/4",
+      "date": "2026-10-19",
+      "commit": "13fba8a",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 131696,
+      "summary": "Three crew seats (Driver, Gunner, Co-pilot) with their own cameras and HUD. Swap with 1/2/3: instant when stopped, a 1-second climb under 20 km/h, refused above. Nobody drives an empty driver's seat."
+    },
+    {
+      "key": "TECH-1",
+      "title": "Scenes and Resources",
+      "pr": 3,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/3",
+      "date": "2026-10-19",
+      "commit": "37eb5bd",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 117568,
+      "summary": "Moves the Rig, zombies, fuel depot and HUD into scenes, and entity stats into .tres Resources tunable live in the editor. Plays the same as before."
+    },
+    {
+      "key": "CAM-1",
+      "title": "Driver free-look orbit camera",
+      "pr": 1,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/1",
+      "date": "2026-10-19",
+      "commit": "bea12df",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 83116,
+      "summary": "Replaces the fixed chase camera with a free-look orbit camera: 360\u00b0 orbit with mouse or right stick, auto-recenter at speed, hold C to look back, and collision that keeps the camera out of walls."
+    },
+    {
+      "key": "BASE",
+      "title": "Initial prototype",
+      "pr": null,
+      "pr_url": null,
+      "date": "2026-10-19",
+      "commit": "c6a7359",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 76572,
+      "summary": "The prototype before any tickets: driving, the speed-density horde director, the solo auto-turret, fuel depots and the day/night clock in a graybox desert village."
+    }
+  ]
+}
