@@ -6,6 +6,18 @@
   },
   "builds": [
     {
+      "key": "NET-4",
+      "title": "Shared clock, depots and round end in co-op",
+      "pr": 29,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/29",
+      "date": "2026-10-27",
+      "commit": "c2cf48c",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 340240,
+      "summary": "Co-op (desktop only): every crew member now sees the host's clock, fuel depots, wreck or dawn result and run-over screen. Anyone can hold E to refuel, and only the host restarts the night (Enter), starts a new run or continues from the garage, taking everyone along. Solo plays the same as before."
+    },
+    {
       "key": "NET-3",
       "title": "Host-owned seats in co-op",
       "pr": 28,
