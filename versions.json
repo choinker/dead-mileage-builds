@@ -6,6 +6,18 @@
   },
   "builds": [
     {
+      "key": "LOOP-8",
+      "title": "Night-to-night run loop",
+      "pr": 26,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/26",
+      "date": "2026-10-27",
+      "commit": "ff62b65",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 332144,
+      "summary": "Surviving to dawn now leads to the next night on a freshly seeded village, and each night brings a bigger horde with more brutes. The HUD shows which night it is, and losing the Rig ends the run with a run-over screen showing nights survived, total kills and total scrap earned, then New Run or Quit."
+    },
+    {
       "key": "WLD-8",
       "title": "Defend HQ mode",
       "pr": 24,
