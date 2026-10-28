@@ -6,6 +6,18 @@
   },
   "builds": [
     {
+      "key": "AI-11",
+      "title": "Zombies crawl out and strike",
+      "pr": 31,
+      "pr_url": "https://github.com/choinker/dead-mileage/pull/31",
+      "date": "2026-10-28",
+      "commit": "7b29b5d",
+      "status": "merged",
+      "engine": "4.7.2.stable",
+      "pck_size": 353720,
+      "summary": "Zombies now claw up out of the ground in a spray of dirt instead of popping in around the Rig, and Walkers and Brutes lean back and lunge when they hit. Each day opens with a creepy synthesised intro track and a flickering DAY N title, and the HUD clock now reads DAY N."
+    },
+    {
       "key": "NET-4",
       "title": "Shared clock, depots and round end in co-op",
       "pr": 29,
